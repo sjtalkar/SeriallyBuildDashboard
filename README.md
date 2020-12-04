@@ -1,4 +1,4 @@
-# SeriallyBuildDashboard
+# Build a Plotly Dash Dashboard incrementally
 
 This series will build a Plotly Dash dashboard to analyis Inside AirBnB publicly available data for the city of Seattle
 
