@@ -1,4 +1,6 @@
-from collections import defaultdict
+####################################################################################################
+# Import dash core components (dcc), html and bootstrap components
+####################################################################################################
 
 import dash
 import dash_core_components as dcc
@@ -11,7 +13,7 @@ import plotly.graph_objs as go
 from app import app
 
 ####################################################################################################
-# 000 - FORMATTING INFO
+# FORMATTING INFO
 ####################################################################################################
 
 
@@ -142,7 +144,7 @@ dashboard_layout = go.Layout(
 )
 
 ####################################################################################################
-# 000 - DATA MAPPING
+# 000 - DATA MAPPING TBD
 ####################################################################################################
 
 
@@ -152,12 +154,12 @@ weekmonth_dict = {"daily": "Daily", "week": "Weekly", "month": "Monthly"}
 ################################################################################################################################################## SET UP END
 
 ################################################################################################################################################## SET UP END
-# Setup dataframes
+# Setup dataframes TBD
 ################################################################################################################################################## SET UP END
 
 
 ################################################################################################################################################## SET UP END
-# Filter  data
+# Filter  data TBD
 ################################################################################################################################################## SET UP END
 
 
@@ -353,9 +355,8 @@ rental = html.Div(
                 html.Div(  # Start of div with 2-col for filters and 9 col for graphs split
                     [
                         html.Div(
-                            [  # This should start an array of  three rows
-                                # create three rows for each filter. The first column of each row is empty
-                                # All 11 columns will be occupied by one filter
+                            [  # This should start an array of  four rows
+                                # create four rows for each filter and its label.
                                 html.Div(  # Start First Row
                                     [
                                         html.Div([], className="col-1",),
@@ -476,7 +477,7 @@ rental = html.Div(
                                     ],
                                     className="row",
                                 ),  # End fourth filter row
-                            ],  # This should end array of a 3 rows
+                            ],  # This should end array of filter rows
                             className="col-2",
                             style=externalgraph_colstyling,
                         ),  # End of the two column filter div
@@ -763,12 +764,10 @@ rentaldrilldown = html.Div(
         # Row 2 :
         html.Div(
             [
-                html.Div(  # STart of div with 2-col for filters and 9 col for graphs split
+                html.Div(
                     [
                         html.Div(
-                            [  # This should start an array of  three rows
-                                # create three rows for each filter. The first column of each row is empty
-                                # All 11 columns will be occupied by one filter
+                            [  # This should start an array of  filter rows
                                 html.Div(  # Start First Row
                                     [
                                         html.Div([], className="col-1",),
@@ -1046,9 +1045,7 @@ rentaldetails = html.Div(
                 html.Div(  # STart of div with 2-col for filters and 9 col for graphs split
                     [
                         html.Div(
-                            [  # This should start an array of  three rows
-                                # create three rows for each filter. The first column of each row is empty
-                                # All 11 columns will be occupied by one filter
+                            [  # This should start an array of  filter rows
                                 html.Div(  # Start First Row
                                     [
                                         html.Div([], className="col-1",),
