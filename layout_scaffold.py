@@ -227,7 +227,7 @@ def get_navbar(p="rental"):
                 className="col-2",
             ),
             html.Div(
-                [dcc.Link(html.H4(children="Page 2"), href="/apps/duration",)],
+                [dcc.Link(html.H4(children="Page 2"), href="/apps/rentaldrilldown",)],
                 className="col-2",
             ),
             html.Div(
@@ -243,7 +243,7 @@ def get_navbar(p="rental"):
         },
     )
 
-    navbar_duration = html.Div(
+    navbar_rentaldrilldown = html.Div(
         [
             html.Div([], className="col-3"),
             html.Div(
@@ -254,7 +254,7 @@ def get_navbar(p="rental"):
                 [
                     dcc.Link(
                         html.H4(children="Page 2", style=navbarcurrentpage),
-                        href="/apps/duration",
+                        href="/apps/rentaldrilldown",
                     )
                 ],
                 className="col-2",
@@ -280,7 +280,7 @@ def get_navbar(p="rental"):
                 className="col-2",
             ),
             html.Div(
-                [dcc.Link(html.H4(children="Page 2"), href="/apps/duration",)],
+                [dcc.Link(html.H4(children="Page 2"), href="/apps/rentaldrilldown",)],
                 className="col-2",
             ),
             html.Div(
@@ -303,8 +303,8 @@ def get_navbar(p="rental"):
 
     if p == "rental":
         return navbar_rental
-    elif p == "duration":
-        return navbar_duration
+    elif p == "rentaldrilldown":
+        return navbar_rentaldrilldown
     else:
         return navbar_rentaldetails
 
@@ -751,10 +751,10 @@ rental = html.Div(
 
 
 ####################################################################################################
-# 002 - DURATION
+# 002 - rentaldrilldown
 ####################################################################################################
 
-duration = html.Div(
+rentaldrilldown = html.Div(
     [
         #####################
         # Row 1 : Header
@@ -1024,7 +1024,7 @@ duration = html.Div(
                 ),  # External row
                 #####################
                 # Last row : Nav bar
-                get_navbar("duration"),
+                get_navbar("rentaldrilldown"),
             ]
         ),  # This ends the div after Pagelinks navbar
     ]
