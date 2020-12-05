@@ -288,7 +288,6 @@ def get_emptyrow(h="45px"):
         className="row",
         style={"height": h},
     )
-
     return emptyrow
 
 
@@ -411,6 +410,8 @@ def get_filterbar():
     return filterNavbar
 
 
+##########################################
+# Row to be filled with KPI elements
 def get_KPIrow():
     KPIrow = html.Div(
         [  # Internal row
@@ -437,49 +438,67 @@ def get_KPIrow():
     return KPIrow
 
 
+####################################################################
+# Returns a div containing a Dash Core Component placement card for a col length = 8
+def get_8placementcard():
+    placementCard = html.Div(
+        [
+            dbc.Card(
+                [
+                    dbc.CardHeader(html.P("Add chart", className="card-title",)),
+                    dbc.CardBody(
+                        [html.P("    Chart 8-column      ", className="card-text",)]
+                    ),
+                ],
+                style={"width": "30rem"},
+            ),  # Card end
+        ],
+        className="col-8",
+        style={
+            "width": "100%",
+            "display": "flex",
+            "align-items": "center",
+            "justify-content": "center",
+        },
+    )
+    return placementCard
+
+
+######################################################################################
+# Returns a div containing a Dash Core Component placement card for a col length = 4
+def get_4placementcard():
+    placementCard = html.Div(
+        [
+            dbc.Card(
+                [
+                    dbc.CardHeader(html.P("Add Chart", className="card-title",)),
+                    dbc.CardBody(
+                        [html.P("     Chart 4-column     ", className="card-text",)]
+                    ),
+                ],
+                style={"width": "30rem"},
+            ),  # Card end
+        ],
+        className="col-4",
+        style={
+            "width": "100%",
+            "display": "flex",
+            "align-items": "center",
+            "justify-content": "center",
+        },
+    )
+    return placementCard
+
+
+##########################################
+# Row containing two chart columns
 def get_twochartrow():
     twoChartRow = html.Div(
         [  # Internal row
             # Chart Column
-            html.Div(
-                [
-                    dbc.Card(
-                        [
-                            dbc.CardHeader(
-                                html.P("Add chart", className="card-title",)
-                            ),
-                            dbc.CardBody(
-                                [html.P("    Chart 1      ", className="card-text",)]
-                            ),
-                        ],
-                        style={"width": "30rem"},
-                    ),  # Card end
-                ],
-                className="col-8",
-            ),
+            get_8placementcard(),
             # Chart Column
-            html.Div(
-                [
-                    dbc.Card(
-                        [
-                            dbc.CardHeader(
-                                html.P("Add Chart", className="card-title",)
-                            ),
-                            dbc.CardBody(
-                                [html.P("     Chart 2     ", className="card-text",)]
-                            ),
-                        ],
-                        style={"width": "30rem"},
-                    ),  # Card end
-                ],
-                className="col-4",
-                style={
-                    "width": "100%",
-                    "display": "flex",
-                    "align-items": "center",
-                    "justify-content": "center",
-                },
-            ),
+            get_4placementcard(),
         ],
         className="row",
         style=chartdiv,
@@ -487,6 +506,8 @@ def get_twochartrow():
     return twoChartRow
 
 
+##########################################
+# Row containing one chart column
 def get_lastchartrow():
     lastRow = html.Div(
         [  # Internal row
@@ -515,6 +536,8 @@ def get_lastchartrow():
     return lastRow
 
 
+##########################################
+# Row containing three chart columns
 def get_threechartrow():
     threeChartRow = html.Div(
         [  # Internal row This is empty right now
@@ -531,9 +554,8 @@ def get_threechartrow():
 
 
 ####################################################################################################
-# 001 - RENTAL
+# RENTAL MAIN
 ####################################################################################################
-
 rental = html.Div(
     [
         #####################
@@ -557,7 +579,6 @@ rental = html.Div(
                                                 get_twochartrow(),  # Internal row
                                                 get_twochartrow(),  # Internal row
                                                 get_lastchartrow(),  # Internal row
-                                                get_threechartrow(),
                                             ],
                                             className="col-12",
                                             style=externalgraph_colstyling,
@@ -586,7 +607,6 @@ rental = html.Div(
 ####################################################################################################
 # Rental Details : Follows template
 ####################################################################################################
-
 rentaldetails = html.Div(
     [
         #####################
@@ -598,132 +618,7 @@ rentaldetails = html.Div(
             [
                 html.Div(  # Start of div with 2-col for filters and 9 col for graphs split
                     [
-                        html.Div(
-                            [  # This should start an array of  filter rows
-                                html.Div(  # Start First Row
-                                    [
-                                        html.Div([], className="col-1",),
-                                        html.Div(
-                                            [
-                                                html.H5(
-                                                    children="Filters:",
-                                                    style={
-                                                        "text-align": "left",
-                                                        "color": dashboard_colors[
-                                                            "medium-blue-grey"
-                                                        ],
-                                                    },
-                                                ),
-                                            ],
-                                            className="col-11",
-                                        ),
-                                    ],
-                                    className="row",
-                                ),  # End first row
-                                html.Div(  # Start second filter row
-                                    [
-                                        html.Div(
-                                            [
-                                                html.Div(
-                                                    [
-                                                        dcc.Dropdown(
-                                                            id="affecting_duration_dropdown",
-                                                            options=[
-                                                                {
-                                                                    "label": weekmonth_dict[
-                                                                        col
-                                                                    ],
-                                                                    "value": col,
-                                                                }
-                                                                for col in weekmonth_dict.keys()
-                                                            ],
-                                                            value="month",
-                                                            multi=False,
-                                                            style={
-                                                                "font-size": "13px",
-                                                                "color": dashboard_colors[
-                                                                    "medium-blue-grey"
-                                                                ],
-                                                                "white-space": "nowrap",
-                                                                "text-overflow": "ellipsis",
-                                                            },
-                                                        )
-                                                    ],
-                                                    style={
-                                                        "width": "70%",
-                                                        "margin-top": "5px",
-                                                    },
-                                                ),
-                                            ],
-                                            className="col-12",
-                                        ),
-                                    ],
-                                    className="row",
-                                ),  # End second filter row
-                                html.Div(  # Start third Row
-                                    [
-                                        html.Div([], className="col-1",),
-                                        html.Div(
-                                            [
-                                                html.H5(
-                                                    children="Filters:",
-                                                    style={
-                                                        "text-align": "left",
-                                                        "color": dashboard_colors[
-                                                            "medium-blue-grey"
-                                                        ],
-                                                    },
-                                                ),
-                                            ],
-                                            className="col-11",
-                                        ),
-                                    ],
-                                    className="row",
-                                ),  # End third row
-                                html.Div(  # Start fourth filter row
-                                    [
-                                        html.Div(
-                                            [
-                                                html.Div(
-                                                    [
-                                                        dcc.Dropdown(
-                                                            id="affecting_duration_dropdown",
-                                                            options=[
-                                                                {
-                                                                    "label": weekmonth_dict[
-                                                                        col
-                                                                    ],
-                                                                    "value": col,
-                                                                }
-                                                                for col in weekmonth_dict.keys()
-                                                            ],
-                                                            value="month",
-                                                            multi=False,
-                                                            style={
-                                                                "font-size": "13px",
-                                                                "color": dashboard_colors[
-                                                                    "medium-blue-grey"
-                                                                ],
-                                                                "white-space": "nowrap",
-                                                                "text-overflow": "ellipsis",
-                                                            },
-                                                        )
-                                                    ],
-                                                    style={
-                                                        "width": "70%",
-                                                        "margin-top": "5px",
-                                                    },
-                                                ),
-                                            ],
-                                            className="col-12",
-                                        ),
-                                    ],
-                                    className="row",
-                                ),  # End fourth filter row
-                            ],  # This should end array of a 3 rows
-                            className="col-2",
-                            style=externalgraph_colstyling,
-                        ),  # End of the two column filter div TILL HERE
+                        get_filterbar(),
                         html.Div(
                             # This column is to be shared by 4 charts
                             [
@@ -731,112 +626,9 @@ rentaldetails = html.Div(
                                     [
                                         html.Div(
                                             [  # External 10-column
-                                                html.Div(
-                                                    [  # Internal row - RECAPS
-                                                        html.Div(
-                                                            [
-                                                                # Add Card/Chart
-                                                            ],
-                                                            className="col-4",
-                                                        ),
-                                                        html.Div(
-                                                            [
-                                                                # Add Card/Chart
-                                                            ],
-                                                            className="col-4",
-                                                        ),
-                                                        html.Div(
-                                                            [
-                                                                # Add Card/Chart
-                                                            ],
-                                                            className="col-4",
-                                                        ),  # Empty column
-                                                    ],
-                                                    className="row",
-                                                    style=chartdiv,
-                                                ),  # Internal row - RECAPS
-                                                html.Div(
-                                                    [  # Internal row
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [
-                                                                # Add Card/Chart
-                                                            ],
-                                                            className="col-8",
-                                                        ),
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [
-                                                                # Card/chart
-                                                            ],
-                                                            className="col-4",
-                                                            style={
-                                                                "width": "100%",
-                                                                "display": "flex",
-                                                                "align-items": "center",
-                                                                "justify-content": "center",
-                                                            },
-                                                        ),
-                                                    ],
-                                                    className="row",
-                                                    style=chartdiv,
-                                                ),  # Internal row
-                                                html.Div(
-                                                    [  # Internal row
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [
-                                                                # Add Card/Chart
-                                                            ],
-                                                            className="col-8",
-                                                        ),
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [
-                                                                # Add Card/Chart
-                                                            ],
-                                                            className="col-4",
-                                                            style={
-                                                                "width": "100%",
-                                                                "display": "flex",
-                                                                "align-items": "center",
-                                                                "justify-content": "center",
-                                                            },
-                                                        ),
-                                                    ],
-                                                    className="row",
-                                                    style=chartdiv,
-                                                ),  # Internal row
-                                                html.Div(
-                                                    [  # Internal row
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [], className="col-8",
-                                                        ),
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [], className="col-4",
-                                                        ),
-                                                    ],
-                                                    className="row",
-                                                ),  # Internal row
-                                                html.Div(
-                                                    [  # Internal row This is empty right now
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [], className="col-4",
-                                                        ),
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [], className="col-4",
-                                                        ),
-                                                        # Chart Column
-                                                        html.Div(
-                                                            [], className="col-4",
-                                                        ),
-                                                    ],
-                                                    className="row",
-                                                ),  # Internal row
+                                                get_KPIrow(),
+                                                get_threechartrow(),
+                                                get_lastchartrow(),
                                             ],
                                             className="col-12",
                                             style=externalgraph_colstyling,
@@ -853,11 +645,10 @@ rentaldetails = html.Div(
                     className="row",
                     style=externalgraph_rowstyling,  # External row
                 ),  # External row
-                #####################
-                # Last row : Nav bar
-                get_navbar("rentaldetails"),
             ]
         ),  # This ends the div after Pagelinks navbar
+        #####################
+        # Last row : Nav bar
+        get_navbar("rentaldetails"),
     ]
 )
-
