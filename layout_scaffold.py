@@ -218,7 +218,7 @@ def get_navbar(p="rental"):
 
     navbar_rental = html.Div(
         [
-            html.Div([], className="col-3"),
+            html.Div([], className="col-4"),
             html.Div(
                 [
                     dcc.Link(
@@ -236,7 +236,7 @@ def get_navbar(p="rental"):
                 ],
                 className="col-2",
             ),
-            html.Div([], className="col-3"),
+            html.Div([], className="col-4"),
         ],
         className="row",
         style={
