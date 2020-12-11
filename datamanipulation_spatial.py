@@ -91,10 +91,6 @@ def createSpatialData():
             "neighbourhood_cleansed": "count",
         }
     )
-    # Add the count of rental posting in every neighborhodd within a neighborhood group
-    rental_geo_df.groupby("neighbourhood_cleansed")["neighbourhood_cleansed"].transform(
-        "count"
-    )
 
     # Create the Scaler object
     scaler = preprocessing.MinMaxScaler(feature_range=(0, 50))

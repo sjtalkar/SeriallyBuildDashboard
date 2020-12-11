@@ -4,6 +4,10 @@ import numpy as np
 import folium
 from folium.features import DivIcon
 
+from datamanipulation_spatial import *
+
+rental_geo_df, rental_neighborhood_df, rental_grp_nbd_df = createSpatialData()
+
 
 def createRentalMap(df, fixed_radius, nbd_or_grp):
     """
@@ -97,7 +101,6 @@ def createRentalMap(df, fixed_radius, nbd_or_grp):
 
 
 def createListingSpatial(rental_geo_df):
-
     this_map = folium.Map(
         location=[rental_geo_df["latitude"].mean(), rental_geo_df["longitude"].mean()],
         tiles="cartodbdark_matter",
@@ -129,4 +132,24 @@ def createListingSpatial(rental_geo_df):
         ]
     ].apply(plotDot, axis=1)
     return this_map
+
+
+def saveNeighborhoodMapHTML():
+    """
+    Call this function to create the HTML of the neighborhood map
+    """
+    this_map = createRentalMap(rental_neighborhood_df, False, "neighbourhood")
+    filename = "NeighborhoodCountMap.html"
+    this_map.save(filename)
+    return
+
+
+def saveListingMapHTML():
+    """
+    Call this function to create the HTML of the individual listings map
+    """
+    this_map = createListingSpatial(rental_geo_df)
+    filename = "IndvListingsMap.html"
+    this_map.save(filename)
+    return
 
