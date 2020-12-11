@@ -36,7 +36,7 @@ def createRentalMap(df, fixed_radius, nbd_or_grp):
                             a) latitude
                             b) longitude
                             c) neighbourhood_cleansed or neighbourhood_group_cleansed
-                            d) marker_color
+                            d) glow_marker_color
 
             Returns : Folium map with circles added                    
 
@@ -56,8 +56,8 @@ def createRentalMap(df, fixed_radius, nbd_or_grp):
             location=[point_row["latitude"], point_row["longitude"]],
             radius=radius,
             weight=3,
-            color=point_row["marker_color"],
-            fill_color=point_row["marker_color"],
+            color=point_row["glow_marker_color"],
+            fill_color=point_row["glow_marker_color"],
             fill_opacity=0.7,
         ).add_child(folium.Tooltip(f"{point_row.name}: {text}")).add_to(this_map)
 
@@ -78,7 +78,7 @@ def createRentalMap(df, fixed_radius, nbd_or_grp):
             [
                 "latitude",
                 "longitude",
-                "marker_color",
+                "glow_marker_color",
                 "nbd_count_normalized",
                 "neighbourhood_cleansed",
             ]
@@ -88,7 +88,7 @@ def createRentalMap(df, fixed_radius, nbd_or_grp):
             [
                 "latitude",
                 "longitude",
-                "marker_color",
+                "glow_marker_color",
                 "nbd_count_normalized",
                 "neighbourhood_group_cleansed",
             ]

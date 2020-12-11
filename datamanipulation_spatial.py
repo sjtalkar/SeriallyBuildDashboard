@@ -51,36 +51,6 @@ def createSpatialData():
         ]
     ].copy()
 
-    color_list = [
-        "#36688D",
-        "#F3CD05",
-        "#F22F08",
-        "#F18904",
-        "#0294A5",
-        "#192E5B",
-        "#1D65A6",
-        "#72A2C0",
-        "#00743F",
-        "#F2A104",
-        "#DAA2DA",
-        "#720017",
-        "#DE9CF0",
-        "#BED905",
-        "#93A806",
-        "#F1931B",
-        "#C033Fd",
-    ]
-    group_color = dict(
-        zip(
-            list(rental_geo_df.groupby("neighbourhood_group_cleansed").groups.keys()),
-            color_list,
-        )
-    )
-    # Set colors for the neighborhood level graphs
-    rental_geo_df["marker_color"] = rental_geo_df["neighbourhood_group_cleansed"].map(
-        group_color
-    )
-
     glow_color_list = [
         "#befdb7",
         "#1B03A3",
@@ -117,7 +87,7 @@ def createSpatialData():
             "latitude": "mean",
             "longitude": "mean",
             "neighbourhood_group_cleansed": "max",
-            "marker_color": "max",
+            "glow_marker_color": "max",
             "neighbourhood_cleansed": "count",
         }
     )
@@ -137,7 +107,7 @@ def createSpatialData():
         {
             "latitude": "mean",
             "longitude": "mean",
-            "marker_color": "max",
+            "glow_marker_color": "max",
             "neighbourhood_group_cleansed": "count",
         }
     )
