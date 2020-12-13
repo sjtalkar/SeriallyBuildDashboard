@@ -366,12 +366,29 @@ def get_KPIrow():
                 [
                     dbc.Card(
                         [
-                            dbc.CardHeader(html.P("Add KPIS", className="card-title",)),
                             dbc.CardBody(
-                                [html.P("     A KPI     ", className="card-text",)]
+                                [
+                                    html.P(
+                                        id="total_nbd",
+                                        style={
+                                            "text-align": "center",
+                                            "color": dashboard_colors["acid-pink"],
+                                            "font-size": "1rem",
+                                            "font-weight": "bold",
+                                            "background-color": dashboard_colors[
+                                                "superdark-blue"
+                                            ],
+                                            "height": "100%",
+                                        },
+                                        className="card-text",
+                                    )
+                                ]
                             ),
                         ],
-                        style={"width": "30rem"},
+                        style={
+                            "width": "30rem",
+                            "background-color": dashboard_colors["superdark-blue"],
+                        },
                     ),  # Card end
                 ],
                 className="col-4",

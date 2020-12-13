@@ -177,3 +177,58 @@ def saveListingMapHTML(nbd):
     filename = "IndvListingsMap.html" if nbd == "All" else f"IndvListingsMap-{nbd}.html"
     this_map.save(filename)
     return filename
+
+
+def getNumNbds(nbd):
+    """
+        Call this function to get number of neighborhooods in a neighborhood group
+        Input : Neighborhood group 
+        Returns : Number of neighborhoods in group
+    """
+    # TBD Add an all and then use All or nbd to filter the dataframe (create a copy of it)
+    if nbd == "All":
+        filtered_df = rental_geo_df.copy()
+    else:
+        filtered_df = rental_geo_df[
+            rental_geo_df["neighbourhood_group_cleansed"] == nbd
+        ].copy()
+
+    # Return the number of unique neighborhoods in the group
+    return filtered_df["neighbourhood_cleansed"].unique().size
+
+
+def getAvgPriceNbd(nbd):
+    """
+        Call this function to get average price(rent) in the neighborhood group
+        Input : Neighborhood group 
+        Returns : Average price  of listings in neighborhood group
+    """
+    # TBD Add an all and then use All or nbd to filter the dataframe (create a copy of it)
+    if nbd == "All":
+        filtered_df = rental_geo_df.copy()
+    else:
+        filtered_df = rental_geo_df[
+            rental_geo_df["neighbourhood_group_cleansed"] == nbd
+        ].copy()
+
+    # Ignore the NaNs when calculating the mean
+    return np.nanmean(rental_geo_df["price"])
+
+
+def getAvailableListingsNum(nbd):
+    """
+        Call this function to get the number of available listings in the neighborhood group
+        Input : Neighborhood group 
+        Returns : Number of available listings in neighborhood group
+    """
+    # TBD Add an all and then use All or nbd to filter the dataframe (create a copy of it)
+    if nbd == "All":
+        filtered_df = rental_geo_df.copy()
+    else:
+        filtered_df = rental_geo_df[
+            rental_geo_df["neighbourhood_group_cleansed"] == nbd
+        ].copy()
+
+    # Ignore the NaNs when calculating the mean
+    return filtered_df[filtered_df["has_availability"] == "t"].shape[0]
+
