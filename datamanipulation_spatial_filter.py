@@ -34,8 +34,128 @@ def normalizeDF(df, measure_name, min_range=0, max_range=1):
     return df
 
 
-# Read the data into a dataframe
-full_df = pd.read_csv("data\listings_1.csv")
+##############################################################################################################
+# Clean up the dataframe
+##############################################################################################################
+def cleanRentalDF(filename):
+
+    # Read the data into a dataframe
+    full_df = pd.read_csv(filename)
+    # select out the columns we are interested in
+    rental_df = full_df[
+        [
+            "id",
+            "price",
+            "listing_url",
+            "host_id",
+            "host_response_rate",
+            "host_response_time",
+            "host_acceptance_rate",
+            "review_scores_communication",
+            "review_scores_location",
+            "review_scores_value",
+            "review_scores_checkin",
+            "reviews_per_month",
+            "review_scores_cleanliness",
+            "license",
+            "instant_bookable",
+            "number_of_reviews",
+            "first_review",
+            "last_review",
+            "neighbourhood_cleansed",
+            "neighbourhood_group_cleansed",
+            "latitude",
+            "longitude",
+            "accommodates",
+            "bathrooms_text",
+            "property_type",
+            "has_availability",
+            "availability_30",
+            "availability_60",
+            "availability_90",
+            "availability_365",
+        ]
+    ].copy()
+
+    # Make price a float column
+    rental_df["price"] = (
+        rental_df["price"].str.replace("$", "").str.replace(",", "").astype("float64")
+    )
+
+    # Change host response rate from string to float so that it is a continuous value
+    # TBD Look for average for the host - should I look for nans in hosts that have multiple records and set Nan to 0 oly for hosts that have only one record?
+    # Mean of their reponse rate for the rest?
+    # How about impute?
+
+    # Convert the response rate to float
+    rental_df["host_response_rate_percent"] = (
+        rental_df["host_response_rate"].str.replace("%", "").astype("float64")
+    )
+    rental_df["host_response_rate_percent"] = rental_df.groupby(["host_id"])[
+        "host_response_rate_percent"
+    ].transform(lambda x: x.fillna(x.mean()))
+    # All the values that are still Nan, we do not have any info about and so fill with zero
+    rental_df["host_response_rate_percent"] = rental_df[
+        "host_response_rate_percent"
+    ].fillna(0)
+    rental_df = rental_df.drop("host_response_rate", axis="columns")
+
+    # Change response time to one within a dict
+    # Question should we set Nans to -0 or to a very high number ( highest rank is least reponsive)
+    rank_response_time = {
+        "within an hour": 1,
+        "within a few hours": 2,
+        "within a day": 3,
+        "a few days or more": 4,
+    }
+    rental_df["host_reponse_time_rank"] = rental_df["host_response_time"].map(
+        rank_response_time
+    )
+    rental_df["host_reponse_time_rank"] = rental_df["host_reponse_time_rank"].fillna(0)
+    rental_df = rental_df.drop("host_response_time", axis="columns")
+
+    # Use the same logic as host_reponse_rate for host_acceptance_rate
+    rental_df["host_acceptance_rate_percent"] = (
+        rental_df["host_acceptance_rate"].str.replace("%", "").astype("float64")
+    )
+    rental_df["host_acceptance_rate_percent"] = rental_df.groupby(["host_id"])[
+        "host_acceptance_rate_percent"
+    ].transform(lambda x: x.fillna(x.mean()))
+    # All the values that are still Nan, we do not have any info about and so fill with zero
+    rental_df["host_acceptance_rate_percent"] = rental_df[
+        "host_acceptance_rate_percent"
+    ].fillna(0)
+    rental_df = rental_df.drop("host_acceptance_rate", axis="columns")
+
+    # (‘t’ means available and ‘f’ means not available)
+    # *Convert t (*true) = 1 , f (false) = 0
+
+    availability_code_dict = {
+        "t": 1,
+        "f": 0,
+    }
+
+    rental_df["instant_bookable"] = rental_df["instant_bookable"].map(
+        availability_code_dict
+    )
+    rental_df["has_availability"] = rental_df["has_availability"].map(
+        availability_code_dict
+    )
+
+    # Question what must be done for dates not present?
+    rental_df["first_review"] = pd.to_datetime(rental_df["first_review"])
+    rental_df["last_review"] = pd.to_datetime(rental_df["last_review"])
+    return rental_df
+
+
+################################################################################################################
+# Call the cleanup function and setup a global dataframe
+################################################################################################################
+full_df = cleanRentalDF("data\listings_1.csv")
+
+################################################################################################################
+# Create data for maps
+################################################################################################################
 
 # These are the primary fields we are interested in
 def createSpatialData():

@@ -132,10 +132,11 @@ p {
 -------------------------------------------------------*/
 .card-text {
   margin-bottom: 7.5px;
-  display: block;
+  display: flex;
   font-size: 14px;
   font-weight: bold;
   white-space: pre;
+  width:40%;
 }
 
 .card-title {

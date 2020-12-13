@@ -185,7 +185,6 @@ def getNumNbds(nbd):
         Input : Neighborhood group 
         Returns : Number of neighborhoods in group
     """
-    # TBD Add an all and then use All or nbd to filter the dataframe (create a copy of it)
     if nbd == "All":
         filtered_df = rental_geo_df.copy()
     else:
@@ -212,7 +211,7 @@ def getAvgPriceNbd(nbd):
         ].copy()
 
     # Ignore the NaNs when calculating the mean
-    return np.nanmean(rental_geo_df["price"])
+    return np.round(np.nanmean(rental_geo_df["price"]), 2)
 
 
 def getAvailableListingsNum(nbd):
@@ -230,5 +229,5 @@ def getAvailableListingsNum(nbd):
         ].copy()
 
     # Ignore the NaNs when calculating the mean
-    return filtered_df[filtered_df["has_availability"] == "t"].shape[0]
+    return filtered_df[filtered_df["has_availability"] == 1].shape[0]
 

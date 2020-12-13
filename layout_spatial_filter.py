@@ -356,44 +356,53 @@ def get_filterbar():
     return filterNavbar
 
 
+def get_card(card_id, color):
+    return dbc.Card(
+        [
+            dbc.CardBody(
+                [
+                    html.P(
+                        id=card_id,
+                        style={
+                            "text-align": "center",
+                            "color": color,
+                            "font-size": "1rem",
+                            "font-weight": "bold",
+                            "background-color": dashboard_colors["superdark-blue"],
+                            "height": "100%",
+                        },
+                        className="card-text",
+                    )
+                ]
+            ),
+        ],
+        style={
+            "width": "80%",
+            "background-color": dashboard_colors["superdark-blue"],
+            "display": "flex",
+            "align-items": "center",
+            "justify-content": "center",
+        },
+    )
+
+
 ##########################################
 # Row to be filled with KPI elements
 def get_KPIrow():
     KPIrow = html.Div(
         [  # Internal row
-            html.Div([], className="col-4",),
             html.Div(
-                [
-                    dbc.Card(
-                        [
-                            dbc.CardBody(
-                                [
-                                    html.P(
-                                        id="total_nbd",
-                                        style={
-                                            "text-align": "center",
-                                            "color": dashboard_colors["acid-pink"],
-                                            "font-size": "1rem",
-                                            "font-weight": "bold",
-                                            "background-color": dashboard_colors[
-                                                "superdark-blue"
-                                            ],
-                                            "height": "100%",
-                                        },
-                                        className="card-text",
-                                    )
-                                ]
-                            ),
-                        ],
-                        style={
-                            "width": "30rem",
-                            "background-color": dashboard_colors["superdark-blue"],
-                        },
-                    ),  # Card end
-                ],
+                [get_card("total_nbd", dashboard_colors["acid-pink"])],
                 className="col-4",
             ),
-            html.Div([], className="col-4",),  # Empty column
+            html.Div(
+                [get_card("avg_price", dashboard_colors["acid-pink"])],
+                className="col-4",
+            ),
+            html.Div(
+                [get_card("total_listings", dashboard_colors["acid-pink"])],
+                className="col-4",
+            ),
         ],
         className="row",
         style=chartdiv,
