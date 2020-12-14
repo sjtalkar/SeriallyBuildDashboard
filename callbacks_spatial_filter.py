@@ -150,9 +150,9 @@ def saveNeighborhoodMapHTML(nbd):
         ].copy()
     this_map = createRentalMap(filtered_df, False, "neighbourhood")
     filename = (
-        "NeighborhoodCountMap.html"
+        "assets/Maps/NeighborhoodCountMap.html"
         if nbd == "All"
-        else f"NeighborhoodCountMap-{nbd}.html"
+        else f"assets/Maps/NeighborhoodCountMap-{nbd}.html"
     )
     this_map.save(filename)
     return filename
@@ -174,7 +174,11 @@ def saveListingMapHTML(nbd):
 
     this_map = createListingSpatial(filtered_df)
 
-    filename = "IndvListingsMap.html" if nbd == "All" else f"IndvListingsMap-{nbd}.html"
+    filename = (
+        "assets/Maps/IndvListingsMap.html"
+        if nbd == "All"
+        else f"assets/Maps/IndvListingsMap-{nbd}.html"
+    )
     this_map.save(filename)
     return filename
 

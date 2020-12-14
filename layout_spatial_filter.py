@@ -9,6 +9,8 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from jupyter_dash import JupyterDash
 import plotly.graph_objs as go
+import plotly.express as px
+
 
 from app import app
 from datamanipulation_spatial_filter import *
@@ -464,7 +466,7 @@ def get_4placementcard():
 
 ####################################################################
 # Returns a div containing a iFrame holder for a col length = 6
-def get_mapcol(map_id, filename="IndvListingsMap.html"):
+def get_mapcol(map_id, filename="assets/Maps/IndvListingsMap.html"):
     """This file returns a Div element that will contain a iFrame that displays a HTML document
 
     Args:
@@ -515,7 +517,8 @@ def get_twochartrow():
 ##########################################
 # Row containing two map charts columns
 def get_mapchartrow(
-    firstFile="IndvListingsMap.html", secondFile="NeighborhoodCountMap.html"
+    firstFile="assets/Maps/IndvListingsMap.html",
+    secondFile="assets/Maps/NeighborhoodCountMap.html",
 ):
     twoMapChartRow = html.Div(
         [  # Internal row
@@ -600,8 +603,8 @@ rental = html.Div(
                                             [  # External 10-column
                                                 get_KPIrow(),
                                                 get_mapchartrow(
-                                                    "IndvListingsMap.html",
-                                                    "NeighborhoodCountMap.html",
+                                                    "assets/Maps/IndvListingsMap.html",
+                                                    "assets/Maps/NeighborhoodCountMap.html",
                                                 ),
                                                 # get_lastchartrow(),  # Internal row
                                             ],

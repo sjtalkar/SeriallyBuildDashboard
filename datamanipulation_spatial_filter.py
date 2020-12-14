@@ -247,3 +247,38 @@ def get_nbdgroups():
     nbd_groups.sort()
     return ["All"] + nbd_groups
 
+
+def createPropertyTypeCol(rental_df):
+    """This function adds a column called property_type_class to the dataframe 
+    Args:
+        rental_df ([type]): [The dataframe has a column called property_type]
+
+    Returns:
+        [type]: [Dataframe with a more concise list of property types]
+    """
+
+    # Property types Private room and Shared Room identified
+    property_df = rental_df[["property_type"]].copy()
+    property_df.loc[
+        property_df["property_type"].str.contains("Private room|Room in"),
+        "property_type",
+    ] = "Private Room"
+    property_df.loc[
+        property_df["property_type"].str.contains("Shared room"), "property_type"
+    ] = "Shared Room"
+
+    # Extrac the second half of all "Entire" property types to get the actual type such as house..
+    property_df.loc[
+        property_df["property_type"].str.contains("Entire "), "property_type"
+    ] = (
+        property_df.loc[
+            property_df["property_type"].str.contains("Entire "), "property_type"
+        ]
+        .str.replace("Entire ", "")
+        .str.capitalize()
+    )
+
+    rental_df["property_type_class"] = property_df["property_type"]
+
+    return rental_df
+
