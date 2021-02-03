@@ -520,7 +520,7 @@ def get_sankeychart(idName):
 def get_WordCloudchart(idName):
     wordCloudChart = html.Div(
         [html.Img(id=idName, src=app.get_asset_url("amenities_all.png"),)],
-        className="col-5",
+        className="col-12",
         style={
             "width": "100%",
             "display": "flex",
@@ -545,6 +545,22 @@ def get_areapropchart(idName):
         },
     )
     return areaprop
+
+
+###########################################################################################
+# Returns a div containing a Dash Core Component bar graph for a col length = 12
+def get_fullrowchart(idName):
+    fullrow = html.Div(
+        [dcc.Graph(id=idName)],
+        className="col-12",
+        style={
+            "width": "100%",
+            "display": "flex",
+            "align-items": "center",
+            "justify-content": "center",
+        },
+    )
+    return fullrow
 
 
 ######################################################################################
@@ -641,18 +657,25 @@ def get_barsankeyrow():
 
 ##########################################
 # Row containing one bar chart columns
-def get_barWordCloudrow():
-    twoChartRow = html.Div(
+def get_amenitiesbarrow():
+    oneChartRow = html.Div(
+        [get_fullrowchart("amenitiesbar_chart"),],  # Internal row
+        className="row",
+        style=externalgraph_rowstyling,
+    )
+    return oneChartRow
+
+
+def get_amenitiesWordCloudrow():
+    oneChartRow = html.Div(
         [  # Internal row
             # Chart Column
             get_WordCloudchart("wordcloud_chart"),
-            # Chart Column
-            get_areapropchart("amenitiesbar_chart"),
         ],
         className="row",
-        style=areapropdiv,
+        style=externalgraph_rowstyling,
     )
-    return twoChartRow
+    return oneChartRow
 
 
 ##########################################
@@ -791,7 +814,9 @@ rentaldetails = html.Div(
                                         html.Div(
                                             [  # External 10-column
                                                 get_KPIrow(),
-                                                get_barWordCloudrow(),
+                                                get_amenitiesWordCloudrow(),
+                                                get_emptyrow(h="10px"),
+                                                get_amenitiesbarrow(),
                                             ],
                                             className="col-12",
                                             style=externalgraph_colstyling,
