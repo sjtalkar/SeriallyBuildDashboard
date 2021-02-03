@@ -13,6 +13,7 @@ import plotly.io as plt_io
 # For the WordCloud mask import PIL
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import os
 
 from app import app
 from datamanipulation_amenities import *
@@ -567,14 +568,30 @@ def createAmenitiesFreqMap(nbd, topn):
 def createAmenitiesWordCloud(nbd, topn):
     amenities_mask = np.array(Image.open("assets/WordCloudMask.png"))
     nbd_filename = nbd.lower()
-    filename = f"amenities_{nbd_filename}.png"
+    filename = f"amenities_{nbd_filename}_{topn}.png"
 
     top_tokenDist_df = getAmenitiesFreqTopN(nbd, topn)
 
-    wc = WordCloud(colormap="Accent", background_color="black", mask=amenities_mask)
+    wc = WordCloud(
+        colormap="Accent",
+        background_color="black",
+        mask=amenities_mask,
+        min_font_size=4,
+        max_font_size=30,
+        include_numbers=True,
+        height=100,
+        contour_width=5,
+        contour_color="white",
+    )
 
     wc.generate_from_frequencies(
         dict(zip(top_tokenDist_df["amenity_token"], top_tokenDist_df["freq"]))
     )
+
+    try:
+        os.remove(f"assets/{filename}")
+    except OSError:
+        pass
+
     wc.to_file(f"assets/{filename}")
     return app.get_asset_url(filename)

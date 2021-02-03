@@ -348,7 +348,7 @@ def getFilterPaneForPage(whichPage):
                             min=20,
                             max=50,
                             step=10,
-                            value=10,  # Set the default value
+                            value=20,  # Set the default value
                             marks={20: "20", 30: "30", 40: "40", 50: "50",},
                         ),
                     ],

@@ -417,6 +417,8 @@ def createTokenDistDF(topn, tokenDist):
     #################################################################
     # create slider for this number of top Limit slider to 10 min and 50 max
     top_tokenDist_df = tokenDist_df.iloc[:topn].copy().reset_index()
+
+    print(top_tokenDist_df)
     top_tokenDist_df["amenity_token"] = top_tokenDist_df["amenity_token"].apply(
         lambda x: x.capitalize()
     )
