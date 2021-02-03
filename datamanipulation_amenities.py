@@ -6,6 +6,10 @@ from folium.features import DivIcon
 
 from sklearn import preprocessing
 
+# For word cloud and amenities bar chart
+from nltk.tokenize import regexp_tokenize
+from nltk import FreqDist
+
 
 def standardizeDF(df, measure_name):
     """
@@ -285,4 +289,140 @@ def get_nbdgroups():
     nbd_groups = list(full_df.neighbourhood_group_cleansed.unique())
     nbd_groups.sort()
     return ["All"] + nbd_groups
+
+
+#############################################################################################################################################
+##################Create a new dataframe for amenities
+#############################################################################################################################################
+
+
+def getAmenitiesTokens(cell_val):
+    return regexp_tokenize(cell_val, "([\w\s\d']+), ")
+
+
+def createAmentiesDF(filename):
+    amenities_df = pd.read_csv(filename)
+    amenities_df["amenities"] = amenities_df["amenities"].replace(
+        {
+            "\[": "",
+            "\]": "",
+            '"': "",
+            r"\\u2019": r"'",
+            r"\\u2013": "-",
+            r"\\u00a0": "",
+        },
+        regex=True,
+    )
+    amenities_df["amenities"] = amenities_df["amenities"].str.lower()
+    amenities_df["amenities_tokens"] = amenities_df["amenities"].apply(
+        getAmenitiesTokens
+    )
+    return amenities_df
+
+
+def createTokenDistDF(topn, tokenDist):
+    tokenDist_df = pd.DataFrame.from_dict(tokenDist, orient="index")
+    tokenDist_df = tokenDist_df.reset_index()
+    tokenDist_df.columns = ["amenity_token", "freq"]
+
+    # Clean brand names and specifics from  some specifuc amenities
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("refrigerator"), "amenity_token"
+    ] = "refrigerator"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("mini fridge"), "amenity_token"
+    ] = "mini fridge"
+
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("electric stove"), "amenity_token"
+    ] = "electric stove"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("induction stove"), "amenity_token"
+    ] = "induction stove"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("gas stove"), "amenity_token"
+    ] = "gas stove"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("stove"), "amenity_token"
+    ] = "stove"
+
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("tv"), "amenity_token"
+    ] = "tv"
+
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("electric oven"), "amenity_token"
+    ] = "electric oven"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("gas oven"), "amenity_token"
+    ] = "gas oven"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("induction oven"), "amenity_token"
+    ] = "induction oven"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("oven"), "amenity_token"
+    ] = "oven"
+
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("shampoo"), "amenity_token"
+    ] = "shampoo"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("conditioner"), "amenity_token"
+    ] = "conditioner"
+    tokenDist_df.loc[
+        (tokenDist_df["amenity_token"].str.contains("body soap"))
+        | (tokenDist_df["amenity_token"].str.contains("body wash")),
+        "amenity_token",
+    ] = "body soap"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("soap"), "amenity_token"
+    ] = "soap"
+
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("paid parking"), "amenity_token"
+    ] = "paid parking"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("free parking"), "amenity_token"
+    ] = "free parking"
+
+    tokenDist_df.loc[
+        (tokenDist_df["amenity_token"].str.contains("paid"))
+        & (
+            (tokenDist_df["amenity_token"].str.contains("parking"))
+            | (tokenDist_df["amenity_token"].str.contains("carport"))
+        ),
+        "amenity_token",
+    ] = "paid parking"
+    tokenDist_df.loc[
+        (tokenDist_df["amenity_token"].str.contains("free"))
+        & (
+            (tokenDist_df["amenity_token"].str.contains("parking"))
+            | (tokenDist_df["amenity_token"].str.contains("carport"))
+        ),
+        "amenity_token",
+    ] = "free parking"
+
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("sound system"), "amenity_token"
+    ] = "sound system"
+    tokenDist_df.loc[
+        tokenDist_df["amenity_token"].str.contains("hot tub"), "amenity_token"
+    ] = "hot tub"
+
+    #################################################################
+    # combine the change amenities together
+    tokenDist_df = tokenDist_df.groupby(["amenity_token"]).agg(freq=("freq", "sum"))
+    tokenDist_df = tokenDist_df.sort_values(by="freq", ascending=False)
+
+    #################################################################
+    # create slider for this number of top Limit slider to 10 min and 50 max
+    top_tokenDist_df = tokenDist_df.iloc[:topn].copy().reset_index()
+    top_tokenDist_df["amenity_token"] = top_tokenDist_df["amenity_token"].apply(
+        lambda x: x.capitalize()
+    )
+
+    return top_tokenDist_df
+
+
+amenities_df = createAmentiesDF(r"data/listings_onlyamenities.csv")
 

@@ -13,7 +13,7 @@ import plotly.express as px
 
 
 from app import app
-from datamanipulation_spatial_filter import *
+from datamanipulation_amenities import *
 
 ####################################################################################################
 # FORMATTING INFO
@@ -308,9 +308,87 @@ def get_emptyrow(h="45px"):
     return emptyrow
 
 
+##########################################################################################
+def getFilterPaneForPage(whichPage):
+    if whichPage == "Amenities":
+        filter_bar = html.Div(  ## For Amenities page with slider
+            [
+                html.Div(
+                    [
+                        dcc.Dropdown(
+                            id="nbd_dropdown",
+                            options=[
+                                {"label": nbd, "value": nbd,} for nbd in nbd_groups
+                            ],
+                            value="All",  # Set the default value
+                            multi=False,
+                            style={
+                                "font-size": "13px",
+                                "color": dashboard_colors["medium-blue-grey"],
+                                "white-space": "nowrap",
+                                "text-overflow": "ellipsis",
+                            },
+                        )
+                    ],
+                    style={"width": "70%", "margin-top": "5px",},
+                ),  # End of div carrying drop down
+                # In same div array add a slider
+                html.Div(
+                    [
+                        html.H6(
+                            children="Top 'n' amenities:",
+                            style={
+                                "text-align": "left",
+                                "color": dashboard_colors["medium-blue-grey"],
+                                "font-weight": "bold",
+                            },
+                        ),
+                        dcc.Slider(
+                            id="freq_slider",
+                            min=20,
+                            max=50,
+                            step=10,
+                            value=10,  # Set the default value
+                            marks={20: "20", 30: "30", 40: "40", 50: "50",},
+                        ),
+                    ],
+                    style={"width": "70%", "margin-top": "5px",},
+                ),  # End of div carrying slider
+            ],
+            className="col-12",
+        )
+    else:
+        filter_bar = html.Div(  ## For other pages
+            [
+                html.Div(
+                    [
+                        dcc.Dropdown(
+                            id="nbd_dropdown",
+                            options=[
+                                {"label": nbd, "value": nbd,} for nbd in nbd_groups
+                            ],
+                            value="All",  # Set the default value
+                            multi=False,
+                            style={
+                                "font-size": "13px",
+                                "color": dashboard_colors["medium-blue-grey"],
+                                "white-space": "nowrap",
+                                "text-overflow": "ellipsis",
+                            },
+                        )
+                    ],
+                    style={"width": "70%", "margin-top": "5px",},
+                ),  # End of div carrying drop down
+            ],
+            className="col-12",
+        )
+
+    return filter_bar
+
+
 #####################
 # Common Filter Navbar
-def get_filterbar():
+def get_filterbar(whichPage):
     filterNavbar = html.Div(
         [  # This should start an array of  four rows
             # create four rows for each filter and its label.
@@ -334,36 +412,7 @@ def get_filterbar():
                 className="row",
             ),  # End first row
             html.Div(  # Start second filter row
-                [
-                    html.Div(
-                        [
-                            html.Div(
-                                [
-                                    dcc.Dropdown(
-                                        id="nbd_dropdown",
-                                        options=[
-                                            {"label": nbd, "value": nbd,}
-                                            for nbd in nbd_groups
-                                        ],
-                                        value="All",  # Set the default value
-                                        multi=False,
-                                        style={
-                                            "font-size": "13px",
-                                            "color": dashboard_colors[
-                                                "medium-blue-grey"
-                                            ],
-                                            "white-space": "nowrap",
-                                            "text-overflow": "ellipsis",
-                                        },
-                                    )
-                                ],
-                                style={"width": "70%", "margin-top": "5px",},
-                            ),
-                        ],
-                        className="col-12",
-                    ),
-                ],
-                className="row",
+                [getFilterPaneForPage(whichPage),], className="row",
             ),  # End second filter row
         ],  # This should end array of filter rows
         className="col-2",
@@ -454,9 +503,9 @@ def get_8placementcard():
 
 ###########################################################################################
 # Returns a div containing a Dash Core Component sankey chart for a col length = 8
-def get_sankeychart():
+def get_sankeychart(idName):
     sankeychart = html.Div(
-        [dcc.Graph(id="sankey_chart")],
+        [dcc.Graph(id=idName)],
         className="col-5",
         style={
             "width": "100%",
@@ -468,11 +517,25 @@ def get_sankeychart():
     return sankeychart
 
 
+def get_WordCloudchart(idName):
+    wordCloudChart = html.Div(
+        [html.Img(id=idName, src=app.get_asset_url("amenities_all.png"),)],
+        className="col-5",
+        style={
+            "width": "100%",
+            "display": "flex",
+            "align-items": "left",
+            "justify-content": "left",
+        },
+    )
+    return wordCloudChart
+
+
 ###########################################################################################
-# Returns a div containing a Dash Core Component bar graph for a col length = 4
-def get_areapropchart():
+# Returns a div containing a Dash Core Component bar graph for a col length = 7
+def get_areapropchart(idName):
     areaprop = html.Div(
-        [dcc.Graph(id="areaprop_chart")],
+        [dcc.Graph(id=idName)],
         className="col-7",
         style={
             "width": "100%",
@@ -566,9 +629,25 @@ def get_barsankeyrow():
     twoChartRow = html.Div(
         [  # Internal row
             # Chart Column
-            get_sankeychart(),
+            get_sankeychart("sankey_chart"),
             # Chart Column
-            get_areapropchart(),
+            get_areapropchart("areaprop_chart"),
+        ],
+        className="row",
+        style=areapropdiv,
+    )
+    return twoChartRow
+
+
+##########################################
+# Row containing one bar chart columns
+def get_barWordCloudrow():
+    twoChartRow = html.Div(
+        [  # Internal row
+            # Chart Column
+            get_WordCloudchart("wordcloud_chart"),
+            # Chart Column
+            get_areapropchart("amenitiesbar_chart"),
         ],
         className="row",
         style=areapropdiv,
@@ -655,7 +734,7 @@ rental = html.Div(
             [
                 html.Div(  # Start of div with 2-col for filters and 9 col for graphs split
                     [
-                        get_filterbar(),
+                        get_filterbar("Main"),
                         html.Div(
                             # This column is to be shared by 4 charts
                             [
@@ -703,7 +782,7 @@ rentaldetails = html.Div(
             [
                 html.Div(  # Start of div with 2-col for filters and 9 col for graphs split
                     [
-                        get_filterbar(),
+                        get_filterbar("Amenities"),
                         html.Div(
                             # This column is to be shared by 4 charts
                             [
@@ -712,8 +791,7 @@ rentaldetails = html.Div(
                                         html.Div(
                                             [  # External 10-column
                                                 get_KPIrow(),
-                                                get_threechartrow(),
-                                                get_lastchartrow(),
+                                                get_barWordCloudrow(),
                                             ],
                                             className="col-12",
                                             style=externalgraph_colstyling,

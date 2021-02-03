@@ -10,8 +10,12 @@ import plotly.express as px
 # Theme settings
 import plotly.io as plt_io
 
+# For the WordCloud mask import PIL
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
-from datamanipulation_bar_sankey import *
+from app import app
+from datamanipulation_amenities import *
 
 
 dashboard_colors = {
@@ -506,3 +510,71 @@ def createAreaPropTypeMap(nbd):
     fig.layout.template = "custom_dark"
 
     return fig
+
+
+#############################################################################################################################################
+
+#############################################################################################################################################
+def getAmenitiesFreqTopN(nbd, topn):
+    def addToTokenFreqDist(cell_value, tokenDist):
+        tokenDist = tokenDist.update(cell_value)
+        return
+
+    if nbd != "All":
+        amenities_area_df = amenities_df[
+            amenities_df["neighbourhood_group_cleansed"] == nbd
+        ].copy()
+    else:
+        amenities_area_df = amenities_df.copy()
+
+    tokenDist = FreqDist()
+    amenities_area_df["amenities_tokens"].apply(addToTokenFreqDist, args=(tokenDist,))
+
+    return createTokenDistDF(topn, tokenDist)
+
+
+def createAmenitiesFreqMap(nbd, topn):
+    """This function returns a  bar chart of topn most frequent amenities
+
+        Args:
+        nbd ([type]): [Neighborhood Group]
+        topn(integer) : Number of frequent amenities to populate in dictionary
+
+        Returns  bar graph figure object    
+    """
+    top_tokenDist_df = getAmenitiesFreqTopN(nbd, topn)
+    fig = go.Figure(
+        [
+            go.Bar(
+                x=top_tokenDist_df.amenity_token,
+                y=top_tokenDist_df.freq,
+                text=top_tokenDist_df.freq,
+                textposition="auto",
+            )
+        ]
+    )
+
+    fig.update_layout(
+        title_text="Amenities most prevalent in area",
+        font_size=12,
+        title_font_color=dashboard_colors["medium-blue-grey"],
+    )
+    # Set the theme
+    fig.layout.template = "custom_dark"
+    return fig
+
+
+def createAmenitiesWordCloud(nbd, topn):
+    amenities_mask = np.array(Image.open("assets/WordCloudMask.png"))
+    nbd_filename = nbd.lower()
+    filename = f"amenities_{nbd_filename}.png"
+
+    top_tokenDist_df = getAmenitiesFreqTopN(nbd, topn)
+
+    wc = WordCloud(colormap="Accent", background_color="black", mask=amenities_mask)
+
+    wc.generate_from_frequencies(
+        dict(zip(top_tokenDist_df["amenity_token"], top_tokenDist_df["freq"]))
+    )
+    wc.to_file(f"assets/{filename}")
+    return app.get_asset_url(filename)
